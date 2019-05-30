@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Copyright (c) 2019 FEROX YT EIRL, www.ferox.yt <devops@ferox.yt>
+# Copyright (c) 2019 Jérémy WALTHER <jeremy.walther@golflima.net>
+# See <https://github.com/frxyt/docker-php-dev> for details.
+
+set -ex
+
+# Get PHP version
+FRX_PHP_VERSION=$(php -v | grep ^PHP | cut -d' ' -f2)
+echo "FRX_PHP_VERSION=${FRX_PHP_VERSION}"
+
+# Install required packages
+DEBIAN_FRONTEND=noninteractive apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --no-install-recommends \
+    libfreetype6-dev \
+    libgd-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libc-client-dev \
+    libkrb5-dev \
+    mailutils \
+    ssmtp
+
+# Install PHP extensions
+docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+docker-php-ext-install -j$(nproc) gd
+docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+docker-php-ext-install -j$(nproc) imap
+docker-php-ext-install -j$(nproc) pdo_mysql
+docker-php-ext-install -j$(nproc) mysqli
+
+# Copy conf
+cp /frx/full/hosts /etc/hosts
+cp /frx/full/ssmtp.conf /etc/ssmtp/ssmtp.conf
+
+# Install WP CLI
+curl -sSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o wp-cli
+chmod a+x wp-cli
+mv wp-cli /usr/local/bin/wp
+
+# Install WP CLI DotEnv Command
+php -d memory_limit=512M /usr/local/bin/wp package install --allow-root aaemnnosttv/wp-cli-dotenv-command:^1.0
+
+# Clean APT cache
+apt-get clean -y && apt-get clean -y && apt-get autoclean -y && rm -r /var/lib/apt/lists/*
+rm -rf /frx/php*
+
+# Display versions
+cat /etc/debian_version
+php -v
+php -m
+composer -V
+php-cs-fixer -V
+node -v
+npm -v
+wp --info
+yarn --version

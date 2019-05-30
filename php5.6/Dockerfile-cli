@@ -1,0 +1,4 @@
+FROM frxyt/php-dev:5.6-cli
+
+COPY ./build ./Dockerfile ./LICENSE ./README.md  /frx/full/
+RUN /frx/full/build
