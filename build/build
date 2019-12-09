@@ -17,6 +17,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --no-install-rec
     libgd-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    libwebp-dev \
+    libxpm-dev \
     libc-client-dev \
     libkrb5-dev \
     mailutils \
@@ -26,7 +28,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --no-install-rec
     zlib1g-dev
 
 # Install PHP extensions
-docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+[[ "${FRX_PHP_VERSION}" =~ ^7.4 ]] \
+    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp --with-xpm \
+    || docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/ --with-xpm-dir=/usr/include/
 docker-php-ext-install -j$(nproc) gd
 PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 docker-php-ext-install -j$(nproc) imap
