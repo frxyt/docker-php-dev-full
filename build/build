@@ -36,7 +36,9 @@ PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 docker-php-ext-install -j$(nproc) imap
 docker-php-ext-install -j$(nproc) intl
 docker-php-ext-install -j$(nproc) pdo_mysql
+docker-php-ext-install -j$(nproc) pdo_pgsql
 docker-php-ext-install -j$(nproc) mysqli
+docker-php-ext-install -j$(nproc) pgsql
 
 # Copy conf
 cp /frx/full/hosts /etc/hosts
