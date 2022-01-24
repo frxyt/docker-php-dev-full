@@ -1,0 +1,57 @@
+name: Build Docker images for PHP 5.6
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/build-5.6.yml
+      - ./build/**
+      - ./php5.6/**
+
+jobs:
+  build-docker-php56:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # PHP 5.6
+      - name: Build and push - frxyt/php-dev-full:5.6-apache
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./php5.6/Dockerfile-apache
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            frxyt/php-dev-full:5.6
+            frxyt/php-dev-full:5.6-apache
+            frxyt/php-dev-full:5.6-apache-buster
+      - name: Build and push - frxyt/php-dev-full:5.6-cli
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./php5.6/Dockerfile-cli
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            frxyt/php-dev-full:5.6-cli
+            frxyt/php-dev-full:5.6-cli-buster
+      - name: Build and push - frxyt/php-dev-full:5.6-fpm
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./php5.6/Dockerfile-fpm
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            frxyt/php-dev-full:5.6-fpm
+            frxyt/php-dev-full:5.6-fpm-buster
