@@ -1,0 +1,4 @@
+FROM frxyt/php-dev:8.0-fpm
+
+COPY ./build ./Dockerfile ./LICENSE ./README.md  /frx/full/
+RUN /frx/full/build
