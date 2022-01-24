@@ -36,6 +36,7 @@ It also adds following tools:
 | 7.2         | `7.2-cli` | `7.2-apache`           | `7.2-fpm`    |
 | 7.3         | `7.3-cli` | `7.3-apache`,          | `7.3-fpm`    |
 | 7.4         | `7.4-cli` | `7.4-apache`, `latest` | `7.4-fpm`    |
+| 8.0         | `8.0-cli` | `8.0-apache`           | `8.0-fpm`    |
 
 ## Build
 
@@ -63,6 +64,10 @@ docker build -f ./php7.3/Dockerfile-fpm    -t frxyt/php-dev-full:7.3-fpm    .
 docker build -f ./php7.4/Dockerfile-apache -t frxyt/php-dev-full:7.4-apache .
 docker build -f ./php7.4/Dockerfile-cli    -t frxyt/php-dev-full:7.4-cli    .
 docker build -f ./php7.4/Dockerfile-fpm    -t frxyt/php-dev-full:7.4-fpm    .
+
+docker build -f ./php8.0/Dockerfile-apache -t frxyt/php-dev-full:8.0-apache .
+docker build -f ./php8.0/Dockerfile-cli    -t frxyt/php-dev-full:8.0-cli    .
+docker build -f ./php8.0/Dockerfile-fpm    -t frxyt/php-dev-full:8.0-fpm    .
 ```
 
 ## License
