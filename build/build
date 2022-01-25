@@ -42,7 +42,6 @@ docker-php-ext-install -j$(nproc) mysqli
 docker-php-ext-install -j$(nproc) pgsql
 
 # Copy conf
-cp /frx/full/hosts /etc/hosts
 cp /frx/full/msmtprc /etc/msmtprc
 
 # Install WP CLI
