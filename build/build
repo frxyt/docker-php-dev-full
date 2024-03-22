@@ -29,7 +29,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --no-install-rec
     zlib1g-dev
 
 # Install PHP extensions
-[[ "${FRX_PHP_VERSION}" =~ ^(7.4)|(8.0) ]] \
+[[ "${FRX_PHP_VERSION}" =~ ^(7.4)|(8.) ]] \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp --with-xpm \
     || docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/ --with-xpm-dir=/usr/include/
 docker-php-ext-install -j$(nproc) gd
@@ -50,7 +50,11 @@ chmod a+x wp-cli
 mv wp-cli /usr/local/bin/wp
 
 # Install WP CLI DotEnv Command
-php -d memory_limit=512M /usr/local/bin/wp package install --allow-root aaemnnosttv/wp-cli-dotenv-command:^1.0
+if [[ "${FRX_PHP_VERSION}" =~ ^8. ]]; then
+    php -d memory_limit=512M /usr/local/bin/wp package install --allow-root aaemnnosttv/wp-cli-dotenv-command:^2.0
+else
+    php -d memory_limit=512M /usr/local/bin/wp package install --allow-root aaemnnosttv/wp-cli-dotenv-command:^1.0
+fi
 
 # Clean APT cache
 apt-get clean -y && apt-get clean -y && apt-get autoclean -y && rm -r /var/lib/apt/lists/*
